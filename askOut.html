@@ -1,0 +1,251 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="logo.png">
+    <title>Ask Out</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Love+Ya+Like+A+Sister&family=Lovers+Quarrel&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: rgb(132, 119, 119);
+        }
+        video {
+            width: 400px;
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            color: white;
+            font-family: "Open Sans", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: <weight>;
+            font-style: normal;
+            font-variation-settings:
+    "wdth" 100;
+        }
+        p {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: white;
+            font-family: "Open Sans", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: <weight>;
+            font-style: normal;
+            font-variation-settings:"wdth" 100;
+            text-align: center; /* Center the paragraph text */ 
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            position: relative;
+            width: 100px;
+            border-radius: 10px;
+        }
+        button:hover {
+            background-color: rgb(132, 119, 119);
+            color: white;
+        }
+        .button-container {
+            position: relative;
+            width: 300px;
+            height: 100px;
+            display: flex;
+            justify-content: space-between; /* Add space between buttons */
+            align-items: center; /* Center buttons vertically */
+        }
+        #yesButton, #noButton {
+            position: relative; /* Keep buttons positioned relative to the container */
+        }
+        .message {
+            font-size: 1.5em;
+            margin-top: 20px;
+            color: white;
+            font-family: "Open Sans", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: <weight>;
+            font-style: normal;
+            font-variation-settings:"wdth" 100;
+            width: 600px;
+            text-align: center; /* Center the message text */
+        }
+        img{
+            border-radius: 50px;
+        }
+        /* General styles for iPhones */
+        
+
+        /* iPhone 11, 11 Pro Max, 12 Pro Max */
+        @media only screen and (max-width: 428px) and (max-height: 926px) {
+            body {
+                background-color: #444;
+                color: white;
+            }
+            h1 {
+                font-size: 50px;
+            }
+            p {
+                font-size: 1.2em;
+            }
+            button {
+                width: 90px;
+                font-size: 1em;
+            }
+            video {
+                width: 100%;
+                height: auto;
+            }
+        }
+
+        /* iPhone 11 Pro, 12, 12 Pro, 13, 13 Pro, 14 */
+        @media only screen and (max-width: 390px) and (max-height: 844px) {
+            body {
+                background-color: #555;
+                color: white;
+            }
+            h1 {
+                font-size: 2.2em;
+            }
+            p {
+                font-size: 1em;
+            }
+            button {
+                width: 85px;
+                font-size: 0.9em;
+            }
+            video {
+                width: 100%;
+                height: auto;
+            }
+        }
+
+        /* iPhone 12 Mini, 13 Mini */
+        @media only screen and (max-width: 360px) and (max-height: 780px) {
+            body {
+                background-color: #666;
+                color: white;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            p {
+                font-size: 0.9em;
+            }
+            button {
+                width: 80px;
+                font-size: 0.8em;
+            }
+            video {
+                width: 100%;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <video src="dancing1.mp4"></video>
+    <h1>Emma</h1>
+    
+    <p>Do you want to go out with me?</p>
+    <div class="button-container">
+        <button id="yesButton">Yes</button>
+        <button id="noButton">No</button>
+    </div><br>
+    <h1 class="message"></h1>
+
+    <script>
+        const noButton = document.getElementById('noButton');
+        const yesButton = document.getElementById('yesButton');
+        const video = document.querySelector('video');
+        const container = document.querySelector('.button-container');
+
+        // Store the original position of the "No" button
+        const originalPosition = {
+            left: noButton.style.left || '0px',
+            top: noButton.style.top || '0px',
+        };
+
+        let resetTimeout;
+        let yesClicked = false; // Flag to track if "Yes" button is clicked
+
+        container.addEventListener('mousemove', (event) => {
+            if (yesClicked) return; // If "Yes" button is clicked, stop showing "No" messages
+
+            const containerRect = container.getBoundingClientRect();
+            const buttonRect = noButton.getBoundingClientRect();
+
+            const mouseX = event.clientX;
+            const mouseY = event.clientY;
+
+            const buttonCenterX = buttonRect.left + buttonRect.width / 2;
+            const buttonCenterY = buttonRect.top + buttonRect.height / 2;
+
+            const distanceX = mouseX - buttonCenterX;
+            const distanceY = mouseY - buttonCenterY;
+            const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
+
+            // If the cursor is too close to the button, move it
+            if (distance < 50) {
+                const buttonWidth = noButton.offsetWidth;
+                const buttonHeight = noButton.offsetHeight;
+
+                // Generate new random positions within the container
+                let randomX = Math.random() * (containerRect.width - buttonWidth);
+                let randomY = Math.random() * (containerRect.height - buttonHeight);
+
+                // Ensure the button stays within the container bounds
+                randomX = Math.max(0, Math.min(randomX, containerRect.width - buttonWidth));
+                randomY = Math.max(0, Math.min(randomY, containerRect.height - buttonHeight));
+
+                noButton.style.left = `${randomX}px`;
+                noButton.style.top = `${randomY}px`;
+
+                // Clear any existing timeout to reset the button
+                clearTimeout(resetTimeout);
+
+                // Set a timeout to return the button to its original position after 2 seconds
+                resetTimeout = setTimeout(() => {
+                    noButton.style.left = originalPosition.left;
+                    noButton.style.top = originalPosition.top;
+                }, 2000);
+
+                message.textContent = "I understand that you don't want to go out with me, but I need you to click the no button to formally decline my request.😭😭😭";
+                message.style.color = 'white';
+            }
+        });
+
+        let message = document.querySelector('.message');
+        // Show a message when the "No" button is clicked
+        noButton.addEventListener('click', () => {
+            if (yesClicked) {
+                // If "Yes" was already clicked, show this message
+                message.textContent = "Sorry, you can't go back on your word. You said yes and can't take it back.🙂‍↕️🙂‍↕️🙂‍↕️";
+                message.style.color = 'white';
+            } else {
+                // Normal behavior for "No" button
+                message.textContent = "I understand that you don't want to go out with me, but I need you to click the no button to formally decline my request.😭😭💔💔";
+                message.style.color = 'white';
+            }
+        });
+
+        // Play the video and show the "Yes" message when the "Yes" button is clicked
+        yesButton.addEventListener('click', () => {
+            yesClicked = true; // Set the flag to true
+            video.play();
+            message.textContent = "Yay! When do I pick you up?🥰🥰🥰";
+            message.style.color = 'white';
+        });
+    </script>
+</body>
+</html>
